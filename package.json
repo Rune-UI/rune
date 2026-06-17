@@ -1,0 +1,48 @@
+{
+  "name": "rune-ui",
+  "version": "0.1.0",
+  "description": "Small primitives for the agentic web. AI-native UI framework.",
+  "type": "module",
+  "exports": {
+    ".": "./src/core/index.js",
+    "./core": "./src/core/index.js",
+    "./router": "./src/router/index.js",
+    "./store": "./src/store/index.js",
+    "./server": "./src/server/index.js",
+    "./agent": "./src/agent/index.js",
+    "./sandbox": "./src/sandbox/index.js"
+  },
+  "main": "./src/core/index.js",
+  "module": "./src/core/index.js",
+  "files": [
+    "src/",
+    "dist/",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test tests/",
+    "build": "node scripts/build.js",
+    "dev": "npx -y serve . -l 3000"
+  },
+  "keywords": [
+    "ui",
+    "framework",
+    "reactive",
+    "signals",
+    "ai",
+    "agent",
+    "web-components",
+    "no-build",
+    "fine-grained-reactivity"
+  ],
+  "author": "Rune Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rune-UI/rune"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

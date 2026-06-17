@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rune — Counter Example</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 16px;
+      padding: 3rem;
+      text-align: center;
+      min-width: 320px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+      color: #a0a0a0;
+    }
+    .count {
+      font-size: 5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+    .buttons {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+    button {
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: #1a1a1a;
+      color: #fafafa;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button:hover {
+      background: #222;
+      border-color: #555;
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+    .reset {
+      color: #888;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import { signal, view, mount } from "../../src/core/index.js";
+
+    function Counter() {
+      const count = signal(0);
+
+      return view(() => `
+        <div class="card">
+          <h1>Rune Counter</h1>
+          <div class="count">${count()}</div>
+          <div class="buttons">
+            <button @click=${() => count.update(v => v - 1)}>−</button>
+            <button @click=${() => count.set(0)} class="reset">Reset</button>
+            <button @click=${() => count.update(v => v + 1)}>+</button>
+          </div>
+        </div>
+      `);
+    }
+
+    mount("#app", Counter);
+  </script>
+</body>
+</html>

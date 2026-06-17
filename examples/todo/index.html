@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rune — Todo Example</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .app {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 480px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 300;
+      color: #a0a0a0;
+      margin-bottom: 1.5rem;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #fafafa;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus { border-color: #7c3aed; }
+    button {
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 0.75rem 1.25rem;
+      border: 1px solid #333;
+      border-radius: 10px;
+      background: #1a1a1a;
+      color: #fafafa;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    button:hover { background: #222; border-color: #555; }
+    .add-btn {
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      border: none;
+      font-weight: 600;
+    }
+    .add-btn:hover { opacity: 0.9; }
+    ul { list-style: none; }
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    li:last-child { border-bottom: none; }
+    li.done .text { text-decoration: line-through; color: #555; }
+    .text { flex: 1; }
+    .toggle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #444;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .toggle.checked {
+      background: #7c3aed;
+      border-color: #7c3aed;
+    }
+    .delete {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+      color: #666;
+      border: none;
+      background: transparent;
+    }
+    .delete:hover { color: #ef4444; }
+    .stats {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #555;
+      text-align: center;
+    }
+    .empty {
+      text-align: center;
+      color: #444;
+      padding: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import { signal, computed, view, mount, batch } from "../../src/core/index.js";
+
+    function TodoApp() {
+      const todos = signal([]);
+      const inputVal = signal("");
+
+      const remaining = computed(() =>
+        todos().filter(t => !t.done).length
+      );
+      const total = computed(() => todos().length);
+
+      function addTodo() {
+        const text = inputVal.peek().trim();
+        if (!text) return;
+        todos.update(list => [
+          ...list,
+          { id: Date.now(), text, done: false }
+        ]);
+        inputVal.set("");
+        // Focus input after render
+        setTimeout(() => {
+          const input = document.querySelector("#todo-input");
+          if (input) input.value = "";
+          if (input) input.focus();
+        }, 0);
+      }
+
+      function toggleTodo(id) {
+        todos.update(list =>
+          list.map(t =>
+            t.id === id ? { ...t, done: !t.done } : t
+          )
+        );
+      }
+
+      function deleteTodo(id) {
+        todos.update(list => list.filter(t => t.id !== id));
+      }
+
+      return view(() => `
+        <div class="app">
+          <h1><span>Rune</span> Todos</h1>
+
+          <div class="input-row">
+            <input
+              type="text"
+              id="todo-input"
+              placeholder="What needs to be done?"
+              value="${inputVal()}"
+              @keydown=${(e) => {
+                if (e.key === "Enter") addTodo();
+                else setTimeout(() => inputVal.set(e.target.value), 0);
+              }}
+              @input=${(e) => inputVal.set(e.target.value)}
+            />
+            <button class="add-btn" @click=${addTodo}>Add</button>
+          </div>
+
+          ${total() === 0
+            ? `<div class="empty">No todos yet. Add one above!</div>`
+            : `<ul>
+                ${todos().map(t => `
+                  <li class="${t.done ? 'done' : ''}">
+                    <button
+                      class="toggle ${t.done ? 'checked' : ''}"
+                      @click=${() => toggleTodo(t.id)}
+                    ></button>
+                    <span class="text">${t.text}</span>
+                    <button
+                      class="delete"
+                      @click=${() => deleteTodo(t.id)}
+                    >✕</button>
+                  </li>
+                `).join("")}
+              </ul>
+              <div class="stats">
+                ${remaining()} of ${total()} remaining
+              </div>`
+          }
+        </div>
+      `);
+    }
+
+    mount("#app", TodoApp);
+  </script>
+</body>
+</html>
