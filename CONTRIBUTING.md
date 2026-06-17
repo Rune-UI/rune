@@ -6,7 +6,7 @@ Thank you for your interest in Rune.
 
 Before contributing, please read:
 
-- [SPEC.md](./SPEC.md) — Framework specification
+- [README.md](./README.md) — Framework specification
 - [Rune.md](./Rune.md) — AI agent skill document
 
 Rune values simplicity. Every API should be justifiable. Every line should be readable by both humans and small language models.
@@ -15,8 +15,8 @@ Rune values simplicity. Every API should be justifiable. Every line should be re
 
 ```bash
 # Clone
-git clone https://github.com/user/rune-ui.git
-cd rune-ui
+git clone https://github.com/Rune-UI/rune.git
+cd rune
 
 # Run tests
 node --test tests/

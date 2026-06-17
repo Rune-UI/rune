@@ -99,10 +99,10 @@ mount()     // Attach to DOM
 ```js
 const count = signal(0);
 
-count();              // read (tracked)
-count.set(5);         // write
-count.update(v => v + 1); // update
-count.peek();         // read (untracked)
+count();                          // read (tracked)
+count.set(5);                     // write
+count.update(v => v + 1);         // update
+count.peek();                     // read (untracked)
 ```
 
 ### Computed
