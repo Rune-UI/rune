@@ -7,7 +7,7 @@
  * Run: node scripts/build.js
  */
 
-import { readFileSync, writeFileSync, mkdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, statSync, chmodSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -80,14 +80,61 @@ ${store.replace(/^import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?\s*$/gm, "")}`;
 function buildRouter() {
   const router = readFileSync(join(ROOT, "src/router/index.js"), "utf-8");
   const bundle = `import { signal, computed, effect } from "./rune.core.js";
-${router.replace(/^import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?\s*$/gm, "")}`;
+${router
+  .replace(/^import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?\s*$/gm, "")
+  .replace(/import\(['"]\.\.\/core\/view\.js['"]\)/g, 'import("./rune.core.js")')}`;
   writeFileSync(join(DIST, "rune.router.js"), bundle);
   const size = statSync(join(DIST, "rune.router.js")).size;
   console.log(`✓ dist/rune.router.js (${(size / 1024).toFixed(1)} KB)`);
+}
+
+// --- Server Bundle ---
+function buildServer() {
+  const server = readFileSync(join(ROOT, "src/server/index.js"), "utf-8");
+  writeFileSync(join(DIST, "rune.server.js"), server);
+  const size = statSync(join(DIST, "rune.server.js")).size;
+  console.log(`✓ dist/rune.server.js (${(size / 1024).toFixed(1)} KB)`);
+}
+
+// --- Agent Bundle ---
+function buildAgent() {
+  const agent = readFileSync(join(ROOT, "src/agent/index.js"), "utf-8");
+  const bundle = `import { signal } from "./rune.core.js";
+${agent.replace(/^import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?\s*$/gm, "")}`;
+  writeFileSync(join(DIST, "rune.agent.js"), bundle);
+  const size = statSync(join(DIST, "rune.agent.js")).size;
+  console.log(`✓ dist/rune.agent.js (${(size / 1024).toFixed(1)} KB)`);
+}
+
+// --- Sandbox Bundle ---
+function buildSandbox() {
+  const sandbox = readFileSync(join(ROOT, "src/sandbox/index.js"), "utf-8");
+  writeFileSync(join(DIST, "rune.sandbox.js"), sandbox);
+  const size = statSync(join(DIST, "rune.sandbox.js")).size;
+  console.log(`✓ dist/rune.sandbox.js (${(size / 1024).toFixed(1)} KB)`);
+}
+
+// --- CLI Bundle ---
+function buildCLI() {
+  const init = readFileSync(join(ROOT, "src/bin/init.js"), "utf-8");
+  const bundle = `#!/usr/bin/env node
+${init}`;
+  writeFileSync(join(DIST, "bin.js"), bundle);
+  try {
+    chmodSync(join(DIST, "bin.js"), 0o755);
+  } catch (err) {
+    // Ignore
+  }
+  const size = statSync(join(DIST, "bin.js")).size;
+  console.log(`✓ dist/bin.js (${(size / 1024).toFixed(1)} KB)`);
 }
 
 console.log("Building Rune...\n");
 buildCore();
 buildStore();
 buildRouter();
+buildServer();
+buildAgent();
+buildSandbox();
+buildCLI();
 console.log("\nDone.");
