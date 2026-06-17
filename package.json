@@ -1,6 +1,6 @@
 {
   "name": "@rune-ui/rune",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Small primitives for the agentic web. AI-native UI framework.",
   "type": "module",
   "exports": {

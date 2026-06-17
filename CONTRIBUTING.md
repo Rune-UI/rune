@@ -63,7 +63,7 @@ node --test tests/core.test.js
 
 ## Publishing
 
-Rune is published to npm as `rune-ui`. Because npm requires two-factor authentication (2FA) for publishing, standard automated publishing with classic tokens will fail.
+Rune is published to npm as `@rune-ui/rune`. Because npm requires two-factor authentication (2FA) for publishing, standard automated publishing with classic tokens will fail.
 
 ### Local Publishing (Manual)
 
@@ -95,7 +95,7 @@ This uses OpenID Connect (OIDC) to authenticate GitHub Actions directly with npm
 #### Method B: Granular Access Token
 If you prefer using tokens instead of Trusted Publishing:
 1. Go to npmjs.com -> **Access Tokens** -> **Generate New Token** -> **Granular Access Token**.
-2. Select package permissions: **Read and write** for `rune-ui`.
+2. Select package permissions: **Read and write** for `@rune-ui/rune`.
 3. In settings, make sure to set the **Require two-factor authentication (2FA)** option to **No (Bypass 2FA)**.
 4. Save the token as a GitHub Repository Secret named `NPM_TOKEN`.
 

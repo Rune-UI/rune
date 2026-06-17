@@ -41,7 +41,7 @@ Developer + Compiler + Bundler + Virtual DOM
 ## Installation
 
 ```bash
-npm install rune-ui
+npm install @rune-ui/rune
 ```
 
 Or use directly via ES Modules (no build step):
@@ -57,7 +57,7 @@ Or use directly via ES Modules (no build step):
 ## Quick Start
 
 ```js
-import { signal, view, mount } from "rune-ui";
+import { signal, view, mount } from "@rune-ui/rune";
 
 const count = signal(0);
 
@@ -178,18 +178,18 @@ mount("#app", Counter);
 ## Packages
 
 ```
-rune-ui             Core: signal, computed, effect, view, mount
-rune-ui/router      Client-side routing
-rune-ui/store       Global reactive store
-rune-ui/server      Server actions (RPC)
-rune-ui/agent       AI agent integration
-rune-ui/sandbox     Secure code execution
+@rune-ui/rune             Core: signal, computed, effect, view, mount
+@rune-ui/rune/router      Client-side routing
+@rune-ui/rune/store       Global reactive store
+@rune-ui/rune/server      Server actions (RPC)
+@rune-ui/rune/agent       AI agent integration
+@rune-ui/rune/sandbox     Secure code execution
 ```
 
 ### Router
 
 ```js
-import { route, navigate, params } from "rune-ui/router";
+import { route, navigate, params } from "@rune-ui/rune/router";
 
 route("/", Home);
 route("/user/:id", UserPage);
@@ -203,7 +203,7 @@ params().id // "42"
 ### Store
 
 ```js
-import { store } from "rune-ui/store";
+import { store } from "@rune-ui/rune/store";
 
 const app = store({
   theme: "dark",
@@ -219,7 +219,7 @@ app.$reset();
 ### Agent
 
 ```js
-import { agent, tool } from "rune-ui/agent";
+import { agent, tool } from "@rune-ui/rune/agent";
 
 const weatherTool = tool({
   name: "weather",
@@ -238,7 +238,7 @@ await assistant.ask("What's the weather in Tokyo?");
 ### Server Actions
 
 ```js
-import { server } from "rune-ui/server";
+import { server } from "@rune-ui/rune/server";
 
 const createTodo = server(async (data) => {
   return await db.insert("todos", data);
@@ -267,7 +267,7 @@ onCleanup(() => {
 ## Web Components
 
 ```js
-import { define } from "rune-ui";
+import { define } from "@rune-ui/rune";
 
 define("my-counter", Counter);
 ```
